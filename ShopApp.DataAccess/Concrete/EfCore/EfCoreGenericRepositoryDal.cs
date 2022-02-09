@@ -29,12 +29,12 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate=null)
+        public List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate=null)
         {
             using (var context = new TContext())
             {
                 return predicate == null
-                    ? context.Set<TEntity>()
+                    ? context.Set<TEntity>().ToList()
                     : context.Set<TEntity>().Where(predicate).ToList();
             }
         }
