@@ -32,10 +32,10 @@ namespace ShopApp.WebUI.Controllers
             productDetails.Categories = product.ProductCategories.Select(x=>x.Category).ToList();
             return View(productDetails);
         }
-        public IActionResult ProductList()
+        public IActionResult ProductList(string categoryName)
         {
             ProductList productList = new();
-            productList.Products = _productService.GetAll();
+            productList.Products = _productService.GetProductsByCategory(categoryName);
             return View(productList);
         }
     }

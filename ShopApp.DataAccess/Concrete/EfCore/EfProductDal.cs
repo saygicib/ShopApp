@@ -23,5 +23,21 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
             return product;
         }
+
+        public List<Product> GetProductsByCategory(string categoryName)
+        {
+            using (var context = new Context())
+            {
+                var products = context.Products.AsQueryable();
+                if (!string.IsNullOrEmpty(categoryName))
+                {
+                    products = products
+                        .Include(x => x.ProductCategories)
+                        .ThenInclude(x => x.Category)
+                        .Where(x => x.ProductCategories.Any(y=>y.Category.Id==1));
+                }
+                return products.ToList();
+            }
+        }
     }
 }

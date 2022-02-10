@@ -24,7 +24,7 @@ namespace ShopApp.WebUI.Controllers
         public IActionResult Index()
         {
             ProductList productList = new();
-            productList.Products = _productService.GetPopularProducts();
+            productList.Products = _productService.GetAll();
             return View(productList);
         }
 
