@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopApp.DataAccess", "ShopA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopApp.Business", "ShopApp.Business\ShopApp.Business.csproj", "{0EFFBBF1-CBC2-4F83-8840-95CB9F3C09C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopApp.WebUI", "ShopApp.WebUI\ShopApp.WebUI.csproj", "{79BB7366-4EC3-41A6-94BD-A6AD7463B699}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopApp.WebUI", "ShopApp.WebUI\ShopApp.WebUI.csproj", "{79BB7366-4EC3-41A6-94BD-A6AD7463B699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

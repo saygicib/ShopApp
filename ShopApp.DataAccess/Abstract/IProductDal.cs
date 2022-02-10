@@ -5,8 +5,9 @@ namespace ShopApp.DataAccess.Abstract
 {
     public interface IProductDal : IRepositoryBaseDal<Product>
     {
-        IEnumerable<Product> GetPopularProductList();
-        List<Product> GetProductsByCategory(string categoryName);
+        List<Product> GetPopularProductList();
+        List<Product> GetProductsByCategory(string categoryName, int page, int pageSize);
+        List<Product> GetAllWithPagging(int page, int pageSize);
         Product GetProductDetails(int id);
     }
 }

@@ -31,6 +31,11 @@ namespace ShopApp.Business.Concrete
             return _productDal.GetAll();
         }
 
+        public List<Product> GetAllWithPagging(int page, int pageSize)
+        {
+            return _productDal.GetAllWithPagging(page, pageSize);
+        }
+
         public Product GetById(int id)
         {
             return _productDal.GetById(id);
@@ -38,7 +43,7 @@ namespace ShopApp.Business.Concrete
 
         public List<Product> GetPopularProducts()
         {
-            return _productDal.GetAll(x=>x.Price>5000);
+            return _productDal.GetAll(x => x.Price > 5000);
         }
 
         public Product GetProductDetails(int id)
@@ -46,9 +51,9 @@ namespace ShopApp.Business.Concrete
             return _productDal.GetProductDetails(id);
         }
 
-        public List<Product> GetProductsByCategory(string categoryName)
+        public List<Product> GetProductsByCategory(string categoryName, int page, int pageSize)
         {
-            return _productDal.GetProductsByCategory(categoryName);
+            return _productDal.GetProductsByCategory(categoryName, page, pageSize);
         }
 
         public void Update(Product product)

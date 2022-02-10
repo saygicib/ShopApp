@@ -18,25 +18,33 @@ namespace ShopApp.WebUI.Controllers
         }
         public IActionResult Details(int? id)
         {
-            if (id==null)
+            if (id == null)
             {
                 return NotFound();
             }
             Product product = _productService.GetProductDetails((int)id);
-            if(product==null)
+            if (product == null)
             {
                 return NotFound();
             }
             ProductDetails productDetails = new();
             productDetails.Product = product;
-            productDetails.Categories = product.ProductCategories.Select(x=>x.Category).ToList();
+            productDetails.Categories = product.ProductCategories.Select(x => x.Category).ToList();
             return View(productDetails);
         }
-        public IActionResult ProductList(string categoryName)
+        public IActionResult ProductList(string categoryName,int page = 1)
         {
+            int pageSize = 5;
             ProductList productList = new();
-            productList.Products = _productService.GetProductsByCategory(categoryName);
+            productList.Products = _productService.GetProductsByCategory(categoryName,page, pageSize);
             return View(productList);
         }
+        //public IActionResult ProductListWithCategories(string categoryName,int page = 1)
+        //{
+        //    int pageSize = 2;
+        //    ProductList productList = new();
+        //    productList.Products = _productService.GetProductsByCategory(categoryName,page, pageSize);
+        //    return View(productList);
+        //}
     }
 }

@@ -9,7 +9,20 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfProductDal : EfCoreGenericRepositoryDal<Product, Context>, IProductDal
     {
-        public IEnumerable<Product> GetPopularProductList()
+        public List<Product> GetAllWithPagging(int page, int pageSize)
+        {
+            using (var context = new Context())
+            {
+                var products = context.Products.AsQueryable();
+                products = products
+                    .Include(x => x.ProductCategories)
+                    .ThenInclude(x => x.Category)
+                    .Skip((page - 1) * pageSize).Take(pageSize);
+                return products.ToList();
+            }
+        }
+
+        public List<Product> GetPopularProductList()
         {
             throw new NotImplementedException();
         }
@@ -24,7 +37,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             return product;
         }
 
-        public List<Product> GetProductsByCategory(string categoryName)
+        public List<Product> GetProductsByCategory(string categoryName, int page, int pageSize)
         {
             using (var context = new Context())
             {
@@ -34,7 +47,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
                     products = products
                         .Include(x => x.ProductCategories)
                         .ThenInclude(x => x.Category)
-                        .Where(x => x.ProductCategories.Any(y=>y.Category.Id==1));
+                        .Where(x => x.ProductCategories.Any(y => y.Category.Name.ToLower()==categoryName.ToLower())).Skip((page - 1) * pageSize).Take(pageSize);
                 }
                 return products.ToList();
             }
