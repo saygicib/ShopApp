@@ -41,6 +41,11 @@ namespace ShopApp.Business.Concrete
             return _productDal.GetAll(x=>x.Price>5000);
         }
 
+        public Product GetProductDetails(int id)
+        {
+            return _productDal.GetProductDetails(id);
+        }
+
         public void Update(Product product)
         {
             _productDal.Update(product);
