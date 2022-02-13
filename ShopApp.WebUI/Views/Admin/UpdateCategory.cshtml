@@ -6,11 +6,11 @@
 <h1>Update Category</h1>
 <hr />
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-4">
         <form asp-controller="Admin" asp-action="UpdateCategory" method="post">
             <input type="hidden" asp-for="Id" class="form-control" />
             <div class="form-group row">
-                <label asp-for="Name" class="col-md-2 col-form-label">CategoryName</label>
+                <label asp-for="Name" class="col-md-2 col-form-label">Name</label>
                 <div class="col-md-10">
                     <input asp-for="Name" class="form-control" />
                 </div>
@@ -21,5 +21,46 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div class="col-md-8">
+        @if (Model.Products is not null)
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td style="width:180px;">Resim</td>
+                        <td>Name</td>
+                        <td style="width:20px;">Price</td>
+                        <td style="width:150px;"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td>
+                                <img src="~/img/@item.ImageUrl" width="180" />
+                            </td>
+                            <td>@item.Name</td>
+                            <td>@item.Price</td>
+                            <td>
+                                <a class="btn btn-primary btn-sm mr-2" asp-controller="Admin" asp-action="UpdateProduct" asp-route-productId="@item.Id">Edit</a>
+                                <a class="btn btn-danger btn-sm mr-2" asp-controller="Admin" asp-action="DeleteProduct" asp-route-productId="@item.Id">Delete</a>
+                                @*<form asp-controller="Admin" asp-action="DeleteProduct" method="post">
+                                    <input type="hidden" name="productId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <h4>No Products</h4>
+            </div>
+        }
     </div>
 </div>

@@ -102,10 +102,11 @@ namespace ShopApp.WebUI.Controllers
             {
                 return NotFound();
             }
-            var category = _categoryService.GetById((int)categoryId);
+            var category = _categoryService.GetByIdWithProducts((int)categoryId);
             UpdateCategory updateCategory = new UpdateCategory();
             updateCategory.Id = category.Id;
             updateCategory.Name = category.Name;
+            updateCategory.Products = category.ProductCategories.Select(x => x.Product).ToList();
             return View(updateCategory);
         }
         [HttpPost]
