@@ -22,22 +22,25 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public List<Product> GetPopularProductList()
+        public List<Product> GetListLastAddedFiveProduct()
         {
-            throw new NotImplementedException();
+            using (var context = new Context())
+            {
+                var product = context.Products.Include(x => x.ProductCategories).ThenInclude(x => x.Category).OrderByDescending(x=>x.CreatedDate).Take(9).ToList();
+                return product;
+            }
         }
 
         public Product GetProductDetails(int id)
         {
-            Product product = new();
             using (var context = new Context())
             {
-                product = context.Products.Where(x => x.Id == id).Include(x => x.ProductCategories).ThenInclude(x => x.Category).FirstOrDefault();
+                var product = context.Products.Where(x => x.Id == id).Include(x => x.ProductCategories).ThenInclude(x => x.Category).FirstOrDefault();
+                return product;
             }
-            return product;
         }
 
-        public List<Product> GetProductsByCategory(string categoryName, int page, int pageSize)
+        public List<Product> GetProductsByCategory(string categoryName)
         {
             using (var context = new Context())
             {
@@ -47,7 +50,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
                     products = products
                         .Include(x => x.ProductCategories)
                         .ThenInclude(x => x.Category)
-                        .Where(x => x.ProductCategories.Any(y => y.Category.Name.ToLower()==categoryName.ToLower())).Skip((page - 1) * pageSize).Take(pageSize);
+                        .Where(x => x.ProductCategories.Any(y => y.Category.Name.ToLower()==categoryName.ToLower()));
                 }
                 return products.ToList();
             }

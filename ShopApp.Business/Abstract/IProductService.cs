@@ -11,12 +11,12 @@ namespace ShopApp.Business.Abstract
     {
         Product GetById(int id); 
         List<Product> GetAll();
-        List<Product> GetPopularProducts();
-        List<Product> GetProductsByCategory(string categoryName,int page,int pageSize);
+        List<Product> GetListLastAddedFiveProduct();
+        List<Product> GetProductsByCategory(string categoryName);
         List<Product> GetAllWithPagging(int page,int pageSize);
         void Create(Product product);
         void Update(Product product);
-        void Delete(Product product);
+        void Delete(int id);
         Product GetProductDetails(int id);
     }
 }

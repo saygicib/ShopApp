@@ -21,9 +21,11 @@ namespace ShopApp.Business.Concrete
             _productDal.Create(product);
         }
 
-        public void Delete(Product product)
+        public void Delete(int id)
         {
-            _productDal.Delete(product);
+            var product = _productDal.GetById(id);
+            if(product is not null)
+                _productDal.Delete(product);           
         }
 
         public List<Product> GetAll()
@@ -41,9 +43,9 @@ namespace ShopApp.Business.Concrete
             return _productDal.GetById(id);
         }
 
-        public List<Product> GetPopularProducts()
+        public List<Product> GetListLastAddedFiveProduct()
         {
-            return _productDal.GetAll(x => x.Price > 5000);
+            return _productDal.GetListLastAddedFiveProduct();
         }
 
         public Product GetProductDetails(int id)
@@ -51,9 +53,9 @@ namespace ShopApp.Business.Concrete
             return _productDal.GetProductDetails(id);
         }
 
-        public List<Product> GetProductsByCategory(string categoryName, int page, int pageSize)
+        public List<Product> GetProductsByCategory(string categoryName)
         {
-            return _productDal.GetProductsByCategory(categoryName, page, pageSize);
+            return _productDal.GetProductsByCategory(categoryName);
         }
 
         public void Update(Product product)
