@@ -66,5 +66,24 @@ namespace ShopApp.DataAccess.Concrete.EfCore
                 return products.ToList();
             }
         }
+
+        public void UpdateWithCategories(Product product, int[] categoryIds)
+        {
+            using (var context = new Context())
+            {
+                var updateProduct = context.Products.Include(x => x.ProductCategories).FirstOrDefault(x => x.Id == product.Id);
+                updateProduct.Name = product.Name;
+                updateProduct.ImageUrl = product.ImageUrl;
+                updateProduct.Price= product.Price;
+                updateProduct.Description = product.Description;
+
+                updateProduct.ProductCategories = categoryIds.Select(x => new ProductCategory
+                {
+                    CategoryId = x,
+                    ProductId=product.Id
+                }).ToList();
+                context.SaveChanges();
+            }
+        }
     }
 }

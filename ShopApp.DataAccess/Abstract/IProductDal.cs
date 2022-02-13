@@ -10,5 +10,6 @@ namespace ShopApp.DataAccess.Abstract
         List<Product> GetAllWithPagging(int page, int pageSize);
         Product GetProductDetails(int id);
         Product GetByIdWithCategories(int productId);
+        void UpdateWithCategories(Product product, int[] categoryIds);
     }
 }

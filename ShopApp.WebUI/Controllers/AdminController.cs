@@ -61,7 +61,7 @@ namespace ShopApp.WebUI.Controllers
             return View(updateProduct);
         }
         [HttpPost]
-        public IActionResult UpdateProduct(UpdateProduct updateProduct)
+        public IActionResult UpdateProduct(UpdateProduct updateProduct, int[] categoryIds)
         {
             Product product = new Product();
             product.Id = updateProduct.Id;
@@ -69,7 +69,7 @@ namespace ShopApp.WebUI.Controllers
             product.ImageUrl = updateProduct.ImageUrl;
             product.Description = updateProduct.Description;
             product.Price = updateProduct.Price;
-            _productService.Update(product);
+            _productService.UpdateWithCategories(product,categoryIds);
             return Redirect("ProductList");
         }
         public IActionResult DeleteProduct(int? productId)

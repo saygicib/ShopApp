@@ -16,6 +16,7 @@ namespace ShopApp.Business.Abstract
         List<Product> GetAllWithPagging(int page,int pageSize);
         void Create(Product product);
         void Update(Product product);
+        void UpdateWithCategories(Product product, int[] categoryIds);
         void Delete(int id);
         Product GetProductDetails(int id);
         Product GetByIdWithCategories(int productId);
