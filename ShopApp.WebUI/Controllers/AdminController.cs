@@ -49,13 +49,15 @@ namespace ShopApp.WebUI.Controllers
             {
                 return NotFound();
             }
-            var product = _productService.GetById((int)productId);
+            Product product = _productService.GetByIdWithCategories((int)productId);
             UpdateProduct updateProduct = new UpdateProduct();
             updateProduct.Id = product.Id;
             updateProduct.Name = product.Name;
             updateProduct.Description = product.Description;
             updateProduct.ImageUrl = product.ImageUrl;
             updateProduct.Price = product.Price;
+            updateProduct.SelectedCategories = product.ProductCategories.Select(x => x.Category).ToList();
+            ViewBag.Categories = _categoryService.GetAll();
             return View(updateProduct);
         }
         [HttpPost]

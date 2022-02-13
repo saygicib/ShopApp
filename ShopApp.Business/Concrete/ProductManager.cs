@@ -43,9 +43,14 @@ namespace ShopApp.Business.Concrete
             return _productDal.GetById(id);
         }
 
-        public List<Product> GetListLastAddedFiveProduct()
+        public Product GetByIdWithCategories(int productId)
         {
-            return _productDal.GetListLastAddedFiveProduct();
+            return _productDal.GetByIdWithCategories(productId);
+        }
+
+        public List<Product> GetListLastAddedNineProduct()
+        {
+            return _productDal.GetListLastAddedNineProduct();
         }
 
         public Product GetProductDetails(int id)

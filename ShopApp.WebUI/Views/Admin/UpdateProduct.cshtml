@@ -41,4 +41,13 @@
             </div>
         </form>
     </div>
+    <div class="col-md-4">
+        @foreach (var item in (List<Category>)ViewBag.Categories)
+        {
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="category@(item.Id)" @(Model.SelectedCategories.Any(x=>x.Id==item.Id)?"checked":"")>
+                <label class="custom-control-label" for="category@(item.Id)" >@item.Name</label>
+            </div>
+        }
+    </div>
 </div>

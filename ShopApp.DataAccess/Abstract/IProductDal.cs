@@ -5,9 +5,10 @@ namespace ShopApp.DataAccess.Abstract
 {
     public interface IProductDal : IRepositoryBaseDal<Product>
     {
-        List<Product> GetListLastAddedFiveProduct();
+        List<Product> GetListLastAddedNineProduct();
         List<Product> GetProductsByCategory(string categoryName);
         List<Product> GetAllWithPagging(int page, int pageSize);
         Product GetProductDetails(int id);
+        Product GetByIdWithCategories(int productId);
     }
 }

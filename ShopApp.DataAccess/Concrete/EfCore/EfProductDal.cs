@@ -22,11 +22,22 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public List<Product> GetListLastAddedFiveProduct()
+        public Product GetByIdWithCategories(int productId)
         {
             using (var context = new Context())
             {
-                var product = context.Products.Include(x => x.ProductCategories).ThenInclude(x => x.Category).OrderByDescending(x=>x.CreatedDate).Take(9).ToList();
+                var product = context.Products
+                    .Include(x => x.ProductCategories)
+                    .ThenInclude(x => x.Category).FirstOrDefault(x => x.Id == productId);
+                return product;
+            }
+        }
+
+        public List<Product> GetListLastAddedNineProduct()
+        {
+            using (var context = new Context())
+            {
+                var product = context.Products.Include(x => x.ProductCategories).ThenInclude(x => x.Category).OrderByDescending(x => x.CreatedDate).Take(9).ToList();
                 return product;
             }
         }
@@ -50,7 +61,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
                     products = products
                         .Include(x => x.ProductCategories)
                         .ThenInclude(x => x.Category)
-                        .Where(x => x.ProductCategories.Any(y => y.Category.Name.ToLower()==categoryName.ToLower()));
+                        .Where(x => x.ProductCategories.Any(y => y.Category.Name.ToLower() == categoryName.ToLower()));
                 }
                 return products.ToList();
             }
