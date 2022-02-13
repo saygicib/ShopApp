@@ -45,7 +45,7 @@
                             <td>@item.Price</td>
                             <td>
                                 <a class="btn btn-primary btn-sm mr-2" asp-controller="Admin" asp-action="UpdateProduct" asp-route-productId="@item.Id">Edit</a>
-                                <a class="btn btn-danger btn-sm mr-2" asp-controller="Admin" asp-action="DeleteProduct" asp-route-productId="@item.Id">Delete</a>
+                                <a class="btn btn-danger btn-sm mr-2" asp-controller="Admin" asp-action="DeleteProductFromCategory" asp-route-productId="@item.Id"  asp-route-categoryId="@Model.Id">Delete</a>
                                 @*<form asp-controller="Admin" asp-action="DeleteProduct" method="post">
                                     <input type="hidden" name="productId" value="@item.Id" />
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>

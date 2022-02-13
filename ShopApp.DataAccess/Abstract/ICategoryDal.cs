@@ -11,5 +11,6 @@ namespace ShopApp.DataAccess.Abstract
     public interface ICategoryDal : IRepositoryBaseDal<Category>
     {
         Category GetByIdWithProducts(int id);
+        void DeleteProductFromCategory(int productId, int categoryId);
     }
 }

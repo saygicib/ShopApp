@@ -29,6 +29,11 @@ namespace ShopApp.Business.Concrete
             _categoryDal.Delete(category);
         }
 
+        public void DeleteProductFromCategory(int productId,int categoryId)
+        {
+            _categoryDal.DeleteProductFromCategory(productId, categoryId);
+        }
+
         public List<Category> GetAll()
         {
             return _categoryDal.GetAll();
