@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopApp.Business", "ShopApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopApp.WebUI", "ShopApp.WebUI\ShopApp.WebUI.csproj", "{79BB7366-4EC3-41A6-94BD-A6AD7463B699}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{D191C270-AFF8-4552-A3F2-A108C74EDA44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{79BB7366-4EC3-41A6-94BD-A6AD7463B699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79BB7366-4EC3-41A6-94BD-A6AD7463B699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79BB7366-4EC3-41A6-94BD-A6AD7463B699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D191C270-AFF8-4552-A3F2-A108C74EDA44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D191C270-AFF8-4552-A3F2-A108C74EDA44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D191C270-AFF8-4552-A3F2-A108C74EDA44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D191C270-AFF8-4552-A3F2-A108C74EDA44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

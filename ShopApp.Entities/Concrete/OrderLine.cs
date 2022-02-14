@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopApp.Entities
+namespace ShopApp.Entities.Concrete
 {
-    public class Order
+    public class OrderLine
     {
     }
 }

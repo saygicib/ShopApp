@@ -1,14 +1,13 @@
-﻿using ShopApp.Entities;
+﻿using ShopApp.Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShopApp.WebUI.Models
+namespace ShopApp.Entities.Dtos
 {
-    public class ProductDetails
+    public class CategoryList
     {
-        public Product Product { get; set; }
         public List<Category> Categories { get; set; }
     }
 }

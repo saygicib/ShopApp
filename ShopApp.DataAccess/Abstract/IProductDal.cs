@@ -1,4 +1,4 @@
-﻿using ShopApp.Entities;
+﻿using ShopApp.Entities.Concrete;
 using System.Collections.Generic;
 
 namespace ShopApp.DataAccess.Abstract

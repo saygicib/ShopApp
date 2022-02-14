@@ -11,12 +11,13 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfCoreGenericRepositoryDal<TEntity, TContext> : IRepositoryBaseDal<TEntity> where TEntity : class where TContext : DbContext, new()
     {
-        public void Create(TEntity entity)
+        public bool Create(TEntity entity)
         {
             using (var context = new TContext())
             {
                 context.Set<TEntity>().Add(entity);
                 context.SaveChanges();
+                return true;
             }
         }
 

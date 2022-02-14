@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ShopApp.Business.Abstract;
+using ShopApp.Entities.Dtos;
 using ShopApp.WebUI.Models;
 using System;
 using System.Collections.Generic;

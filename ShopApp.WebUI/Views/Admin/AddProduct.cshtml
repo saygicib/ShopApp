@@ -1,4 +1,4 @@
-﻿@model AddProduct 
+﻿@model AddProduct
 @{
     ViewData["Title"] = "AddProduct";
 }
@@ -7,6 +7,10 @@
 <hr />
 <div class="row">
     <div class="col-md-8">
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="text-danger">@ViewBag.ErrorMessage</div>
+        }
         <form asp-controller="Admin" asp-action="AddProduct" method="post">
             <div class="form-group row">
                 <label asp-for="Name" class="col-md-2 col-form-label">ProductName</label>

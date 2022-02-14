@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShopApp.Business.Abstract;
-using ShopApp.Entities;
-using ShopApp.WebUI.Models;
+using ShopApp.Entities.Dtos;
+using ShopApp.Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,18 +34,26 @@ namespace ShopApp.WebUI.Controllers
         [HttpPost]
         public IActionResult AddProduct(AddProduct product)
         {
-            Product addedProduct = new Product();
-            addedProduct.Name = product.Name;
-            addedProduct.ImageUrl = product.ImageUrl;
-            addedProduct.Description = product.Description;
-            addedProduct.Price = product.Price;
-            _productService.Create(addedProduct);
-            return Redirect("ProductList");
+            if (!ModelState.IsValid)
+            {
+                Product addedProduct = new Product();
+                addedProduct.Name = product.Name;
+                addedProduct.ImageUrl = product.ImageUrl;
+                addedProduct.Description = product.Description;
+                addedProduct.Price = product.Price;
+                if (_productService.Create(addedProduct))
+                {
+                    return Redirect("ProductList");
+                }
+                ViewBag.ErrorMessage = _productService.ErrorMessage;
+                return View(product);
+            }
+            return View(product);
         }
         [HttpGet]
         public IActionResult UpdateProduct(int? productId)
         {
-            if (productId==null)
+            if (productId == null)
             {
                 return NotFound();
             }
@@ -69,7 +77,7 @@ namespace ShopApp.WebUI.Controllers
             product.ImageUrl = updateProduct.ImageUrl;
             product.Description = updateProduct.Description;
             product.Price = updateProduct.Price;
-            _productService.UpdateWithCategories(product,categoryIds);
+            _productService.UpdateWithCategories(product, categoryIds);
             return Redirect("ProductList");
         }
         public IActionResult DeleteProduct(int? productId)
@@ -120,14 +128,14 @@ namespace ShopApp.WebUI.Controllers
             _categoryService.Update(category);
             return Redirect("CategoryList");
         }
-        public IActionResult DeleteCategory(int? categoryId )
+        public IActionResult DeleteCategory(int? categoryId)
         {
             _categoryService.Delete((int)categoryId);
             return Redirect("CategoryList");
         }
-        public IActionResult DeleteProductFromCategory(int? productId,int? categoryId)
+        public IActionResult DeleteProductFromCategory(int? productId, int? categoryId)
         {
-            _categoryService.DeleteProductFromCategory((int)productId,(int)categoryId);
+            _categoryService.DeleteProductFromCategory((int)productId, (int)categoryId);
             return Redirect("CategoryList");
         }
     }

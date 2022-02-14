@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopApp.Entities
+namespace ShopApp.Entities.Dtos
 {
-    public class OrderLine
+    public class AddCategory
     {
+        public string Name { get; set; }
     }
 }
