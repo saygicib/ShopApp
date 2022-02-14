@@ -1,5 +1,6 @@
 ﻿using Core.Aspect.Autofac.Validation;
 using ShopApp.Business.Abstract;
+using ShopApp.Business.ValidationRules.FluentValidation.ProductValidator;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.Entities.Concrete;
 using System;
@@ -19,15 +20,10 @@ namespace ShopApp.Business.Concrete
         }
 
 
-        [ValidationAspect(typeof(Product))]
-        public bool Create(Product product)
+        [ValidationAspect(typeof(ProductValidator))]
+        public void Create(Product product)
         {
-            if (Validate(product))
-            {
-                _productDal.Create(product);
-                return true;
-            }
-            return false;
+            _productDal.Create(product);
         }
 
         public void Delete(int id)
@@ -80,22 +76,6 @@ namespace ShopApp.Business.Concrete
         public void UpdateWithCategories(Product product, int[] categoryIds)
         {
             _productDal.UpdateWithCategories(product, categoryIds);
-        }
-        public string ErrorMessage { get; set; }
-        public bool Validate(Product entity)
-        {
-            var isValid = true;
-            if (string.IsNullOrEmpty(entity.Name))
-            {
-                ErrorMessage += "Ürün ismi girmelisiniz.\n";
-                isValid = false;
-            }
-            if (string.IsNullOrEmpty(entity.Description))
-            {
-                ErrorMessage += "Açıklama on karakterden uzun olmalıdır.\n";
-                isValid = false;
-            }
-            return isValid;
         }
     }
 }

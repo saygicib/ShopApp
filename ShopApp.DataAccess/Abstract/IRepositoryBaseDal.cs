@@ -12,7 +12,7 @@ namespace ShopApp.DataAccess.Abstract
         TEntity GetById(int id);
         TEntity GetOne(Expression<Func<TEntity, bool>> predicate=null);
         List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate=null);
-        bool Create(TEntity entity);
+        void Create(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
     }

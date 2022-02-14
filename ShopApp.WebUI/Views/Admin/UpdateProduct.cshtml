@@ -1,11 +1,12 @@
 ﻿@model UpdateProduct
 @{
     ViewData["Title"] = "Update";
+    var counter = 0;
 }
 
 <h1>Update Product</h1>
 <hr />
-<form asp-controller="Admin" asp-action="UpdateProduct" method="post">
+<form asp-controller="Admin" asp-action="UpdateProduct" method="post" enctype="multipart/form-data">
     <div class="row">
         <div class="col-md-8">
             <input type="hidden" asp-for="Id" class="form-control" />
@@ -18,7 +19,9 @@
             <div class="form-group row">
                 <label asp-for="ImageUrl" class="col-md-2 col-form-label">Image</label>
                 <div class="col-md-10">
-                    <input asp-for="ImageUrl" class="form-control" />
+                    <input type="hidden" name="ImageUrl" value="@Model.ImageUrl" />
+                    <img src="~/img/@Model.ImageUrl" width="80" />
+                    <input type="file" name="file" value="" />
                 </div>
             </div>
             <div class="form-group row">
@@ -42,12 +45,25 @@
         <div class="col-md-4">
             @foreach (var item in (List<Category>)ViewBag.Categories)
             {
+                var isChecked = "";
+                @if (Model.SelectedCategories.Any(x => x.Id == item.Id))
+                {
+                    isChecked = "checked";
+                    <input type="hidden" name="SelectedCategories[@counter].Id" value="@item.Id" />
+                    <input type="hidden" name="SelectedCategories[@counter].Id" value="@item.Name" />
+                    counter++;
+                }
+                else
+                {
+                    isChecked = "";
+                }
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox"
                            name="categoryIds"
-                           value="@item.Id" e
+                           value="@item.Id"
                            class="custom-control-input"
-                           id="category@(item.Id)" @(Model.SelectedCategories.Any(x => x.Id == item.Id) ? "checked" : "")>
+                           id="category@(item.Id)"
+                           @isChecked>
                     <label class="custom-control-label" for="category@(item.Id)">@item.Name</label>
                 </div>
             }

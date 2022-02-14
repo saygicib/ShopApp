@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace ShopApp.WebUI.Controllers
 {
@@ -32,23 +34,25 @@ namespace ShopApp.WebUI.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddProduct(AddProduct product)
+        public IActionResult AddProduct(AddProduct product,IFormFile file)
         {
-            if (!ModelState.IsValid)
+            Product addedProduct = new Product();
+            addedProduct.Name = product.Name; 
+            if (file != null)
             {
-                Product addedProduct = new Product();
-                addedProduct.Name = product.Name;
-                addedProduct.ImageUrl = product.ImageUrl;
-                addedProduct.Description = product.Description;
-                addedProduct.Price = product.Price;
-                if (_productService.Create(addedProduct))
+                var randomImageName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomImageName);
+                using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    return Redirect("ProductList");
+                    file.CopyToAsync(stream).Wait();
                 }
-                ViewBag.ErrorMessage = _productService.ErrorMessage;
-                return View(product);
+                addedProduct.ImageUrl = randomImageName;
             }
-            return View(product);
+
+            addedProduct.Description = product.Description;
+            addedProduct.Price = product.Price;
+            _productService.Create(addedProduct);
+            return Redirect("ProductList");
         }
         [HttpGet]
         public IActionResult UpdateProduct(int? productId)
@@ -69,16 +73,34 @@ namespace ShopApp.WebUI.Controllers
             return View(updateProduct);
         }
         [HttpPost]
-        public IActionResult UpdateProduct(UpdateProduct updateProduct, int[] categoryIds)
+        public IActionResult UpdateProduct(UpdateProduct updateProduct, int[] categoryIds, IFormFile file)
         {
-            Product product = new Product();
-            product.Id = updateProduct.Id;
-            product.Name = updateProduct.Name;
-            product.ImageUrl = updateProduct.ImageUrl;
-            product.Description = updateProduct.Description;
-            product.Price = updateProduct.Price;
-            _productService.UpdateWithCategories(product, categoryIds);
-            return Redirect("ProductList");
+            if (ModelState.IsValid)
+            {
+                Product product = new Product();
+                product.Id = updateProduct.Id;
+                product.Name = updateProduct.Name;
+                product.Description = updateProduct.Description;
+                product.Price = updateProduct.Price;
+                product.ImageUrl = updateProduct.ImageUrl;
+
+                
+                if (file != null)
+                {
+                    var randomImageName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomImageName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        file.CopyToAsync(stream).Wait();
+                    }
+                    product.ImageUrl = randomImageName;
+                }
+
+                _productService.UpdateWithCategories(product, categoryIds);
+                return Redirect("ProductList");
+            }
+            ViewBag.Categories = _categoryService.GetAll();
+            return View(updateProduct);
         }
         public IActionResult DeleteProduct(int? productId)
         {
