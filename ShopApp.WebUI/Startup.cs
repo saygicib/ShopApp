@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -42,8 +43,29 @@ namespace ShopApp.WebUI
                 options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequireUppercase = true;
 
+                options.Lockout.MaxFailedAccessAttempts = 5; // 5 kere hatalý giriþ
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // giriþ yapmak için 5 dakika bekleyecek.
+                options.Lockout.AllowedForNewUsers = true;
+
+                options.User.RequireUniqueEmail = true;
+
+                options.SignIn.RequireConfirmedEmail = false;//Mail onayý
+                options.SignIn.RequireConfirmedPhoneNumber = false; //telefon onayý
             });
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/account/login";
+                options.LogoutPath = "/account/logout";
+                options.AccessDeniedPath = "/account/accessdenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
+                options.Cookie = new CookieBuilder
+                {
+                    HttpOnly = true,
+                    Name=".ShopApp.Security.Cookie"
+                };
+            });
 
             services.AddScoped<IProductDal, EfProductDal>();
             services.AddScoped<ICategoryDal, EfCategoryDal>();
