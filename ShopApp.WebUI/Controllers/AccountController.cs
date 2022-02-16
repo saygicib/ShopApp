@@ -62,7 +62,7 @@ namespace ShopApp.WebUI.Controllers
             {
                 return View(dto);
             }
-            var user = await _userManager.FindByNameAsync(dto.Email);
+            var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user==null)
             {
                 ModelState.AddModelError("","Kullanıcı bulunamadı.");
@@ -73,8 +73,8 @@ namespace ShopApp.WebUI.Controllers
             {
                 return Redirect(returnUrl);
             }
-            ModelState.AddModelError("", "Kullanıcı adı veya parola hatalı.");
-            return View();
+            ModelState.AddModelError("", "Email adresi veya parola hatalı.");
+            return View(dto);
         }
     }
 }
