@@ -49,5 +49,31 @@ namespace ShopApp.WebUI.Controllers
             ModelState.AddModelError("", "Bilinmeyen bir hata oluştu.");
             return View(dto);
         }
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View(new LoginDto());
+        }
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginDto dto,string returnUrl=null)
+        {
+            returnUrl = returnUrl ?? "~/";
+            if(!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+            var user = await _userManager.FindByNameAsync(dto.UserName);
+            if (user==null)
+            {
+                ModelState.AddModelError("","Kullanıcı bulunamadı.");
+                return View(dto);
+            }
+            var result = await _signInManager.PasswordSignInAsync(dto.UserName, dto.Password, true/*Beni hatırla*/, false);
+            if(result.Succeeded)
+            {
+                return Redirect(returnUrl);
+            }
+            return View();
+        }
     }
 }
