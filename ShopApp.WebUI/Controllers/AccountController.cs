@@ -62,17 +62,18 @@ namespace ShopApp.WebUI.Controllers
             {
                 return View(dto);
             }
-            var user = await _userManager.FindByNameAsync(dto.UserName);
+            var user = await _userManager.FindByNameAsync(dto.Email);
             if (user==null)
             {
                 ModelState.AddModelError("","Kullanıcı bulunamadı.");
                 return View(dto);
             }
-            var result = await _signInManager.PasswordSignInAsync(dto.UserName, dto.Password, true/*Beni hatırla*/, false);
+            var result = await _signInManager.PasswordSignInAsync(user, dto.Password, true/*Beni hatırla*/, false);
             if(result.Succeeded)
             {
                 return Redirect(returnUrl);
             }
+            ModelState.AddModelError("", "Kullanıcı adı veya parola hatalı.");
             return View();
         }
     }
