@@ -50,14 +50,16 @@ namespace ShopApp.WebUI.Controllers
             return View(dto);
         }
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl=null)
         {
-            return View(new LoginDto());
+            return View(new LoginDto()
+            {
+                ReturnUrl = returnUrl
+            });
         }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDto dto,string returnUrl=null)
+        public async Task<IActionResult> Login(LoginDto dto)
         {
-            returnUrl = returnUrl ?? "~/";
             if(!ModelState.IsValid)
             {
                 return View(dto);
@@ -71,7 +73,7 @@ namespace ShopApp.WebUI.Controllers
             var result = await _signInManager.PasswordSignInAsync(user, dto.Password, true/*Beni hatırla*/, false);
             if(result.Succeeded)
             {
-                return Redirect(returnUrl);
+                return Redirect(dto.ReturnUrl??"~/");
             }
             ModelState.AddModelError("", "Email adresi veya parola hatalı.");
             return View(dto);
