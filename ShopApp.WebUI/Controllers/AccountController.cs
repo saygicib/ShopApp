@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Core.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using ShopApp.Business.Concrete;
@@ -50,10 +51,12 @@ namespace ShopApp.WebUI.Controllers
 
                 MailHelper.SendMail(dto.Email, "Confirm your email", $"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link to confirm your email account.");
 
+                TempData.Put("message", new ResultMessage() { Title = "Confirm your email", Message = "Click the link to confirm your email account.", Css = "warning" });
+
                 return RedirectToAction("login", "account");
             }
 
-            ModelState.AddModelError("", "Bilinmeyen bir hata oluştu.");
+            TempData.Put("message", new ResultMessage() { Title = "Exists", Message = "This email or username exists", Css = "warning" });
             return View(dto);
         }
         [HttpGet]
@@ -74,13 +77,13 @@ namespace ShopApp.WebUI.Controllers
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
             {
-                ModelState.AddModelError("", "Kullanıcı bulunamadı.");
+                TempData.Put("message", new ResultMessage() { Title = "Not Found", Message = "User Not Found", Css = "warning" });
                 return View(dto);
             }
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                ModelState.AddModelError("", "Hesabınızı onaylayın.");
+                TempData.Put("message", new ResultMessage() { Title = "Confirm your account", Message = "Account confirmation required.", Css = "warning" });
                 return View(dto);
             }
 
@@ -90,20 +93,24 @@ namespace ShopApp.WebUI.Controllers
             {
                 return Redirect(dto.ReturnUrl ?? "~/");
             }
-            ModelState.AddModelError("", "Email adresi veya parola hatalı.");
+            TempData.Put("message", new ResultMessage() { Title = "Error", Message = "Email or password error.", Css = "danger" });
+
             return View(dto);
         }
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+
+            TempData.Put("message", new ResultMessage() { Title = "Session Closed.", Message = "The session was securely closed.", Css = "warning" });
+
             return Redirect("~/");
         }
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (userId == null || token == null)
             {
-                TempData["message"] = "Geçersiz token";
-                return View();
+                TempData.Put("message", new ResultMessage() { Title = "Account Confirmation.", Message = "Your information is incorrect for account confirmation.", Css = "danger" });
+                return Redirect("~/");
             }
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
@@ -111,11 +118,11 @@ namespace ShopApp.WebUI.Controllers
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
-                    TempData["message"] = "Hesabınız onaylandı.";
-                    return View();
+                    TempData.Put("message", new ResultMessage() { Title = "Account Confirmation.", Message = "Your account has been successfully approved", Css = "success" });
+                    return RedirectToAction("Login");
                 }
             }
-            TempData["message"] = "Hesabınız onaylanmadı.";
+            TempData.Put("message", new ResultMessage() { Title = "Account Confirmation.", Message = "Your account could not be confirmed", Css = "danger" });
             return View();
         }
         public IActionResult ForgotPassword()
@@ -127,13 +134,13 @@ namespace ShopApp.WebUI.Controllers
         {
             if (string.IsNullOrEmpty(email))
             {
-                ModelState.AddModelError("", "Email adresi giriniz.");
+                TempData.Put("message", new ResultMessage() { Title = "Forgot Password", Message = "Your information is incorrect", Css = "danger" });
                 return View();
             }
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                ModelState.AddModelError("", "Email adresi hatalı.");
+                TempData.Put("message", new ResultMessage() { Title = "Forgot Password", Message = "Not user found for this email address.", Css = "danger" });
                 return View();
             }
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -142,8 +149,12 @@ namespace ShopApp.WebUI.Controllers
                 token = token
             });//Kullanıcıya email olarak gidecek.
 
+
             //sendmail
             MailHelper.SendMail(email, "Reset Password", $"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link for reset password.");
+
+            TempData.Put("message", new ResultMessage() { Title = "Forgot Password", Message = "Sended mail for reset password", Css = "danger" });
+
             return RedirectToAction("Login", "Account");
         }
         [HttpGet]
