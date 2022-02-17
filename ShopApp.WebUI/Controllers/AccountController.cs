@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using ShopApp.Entities.Dtos;
 using ShopApp.WebUI.Identity;
@@ -14,11 +15,13 @@ namespace ShopApp.WebUI.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
         public IActionResult Register()
         {
@@ -47,6 +50,9 @@ namespace ShopApp.WebUI.Controllers
                 var callBackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token });//Kullanıcıya email olarak gidecek.
 
                 //sendmail
+                await _emailSender.SendEmailAsync(dto.Email,"Confirm your email",$"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link to confirm your email account.");
+
+
                 return RedirectToAction("login", "account");
             }
 
@@ -113,6 +119,20 @@ namespace ShopApp.WebUI.Controllers
                 }
             }
             TempData["message"] = "Hesabınız onaylanmadı.";
+            return View();
+        }
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ForgotPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                ModelState.AddModelError("","Email adresi giriniz.");
+                return View();
+            }
             return View();
         }
     }
