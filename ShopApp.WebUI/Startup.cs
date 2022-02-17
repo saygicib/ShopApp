@@ -49,7 +49,7 @@ namespace ShopApp.WebUI
 
                 options.User.RequireUniqueEmail = true;
 
-                options.SignIn.RequireConfirmedEmail = false;//Mail onayý
+                options.SignIn.RequireConfirmedEmail = true;//Mail onayý
                 options.SignIn.RequireConfirmedPhoneNumber = false; //telefon onayý
             });
 
@@ -63,7 +63,8 @@ namespace ShopApp.WebUI
                 options.Cookie = new CookieBuilder
                 {
                     HttpOnly = true,
-                    Name=".ShopApp.Security.Cookie"
+                    Name = ".ShopApp.Security.Cookie",
+                    SameSite = SameSiteMode.Strict//Sadece kullanýcýnýn tarayýcýsýndan
                 };
             });
 

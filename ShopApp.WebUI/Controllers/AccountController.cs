@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.WebUI.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -42,15 +43,18 @@ namespace ShopApp.WebUI.Controllers
             if (result.Succeeded)
             {
                 //token
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callBackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token });//Kullanıcıya email olarak gidecek.
+
                 //sendmail
-                return RedirectToAction("login","account");
+                return RedirectToAction("login", "account");
             }
 
             ModelState.AddModelError("", "Bilinmeyen bir hata oluştu.");
             return View(dto);
         }
         [HttpGet]
-        public IActionResult Login(string returnUrl=null)
+        public IActionResult Login(string returnUrl = null)
         {
             return View(new LoginDto()
             {
@@ -60,23 +64,56 @@ namespace ShopApp.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(dto);
             }
             var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user==null)
+            if (user == null)
             {
-                ModelState.AddModelError("","Kullanıcı bulunamadı.");
+                ModelState.AddModelError("", "Kullanıcı bulunamadı.");
                 return View(dto);
             }
-            var result = await _signInManager.PasswordSignInAsync(user, dto.Password, true/*Beni hatırla*/, false);
-            if(result.Succeeded)
+
+            if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                return Redirect(dto.ReturnUrl??"~/");
+                ModelState.AddModelError("", "Hesabınızı onaylayın.");
+                return View(dto);
+            }
+
+
+            var result = await _signInManager.PasswordSignInAsync(user, dto.Password, true/*Beni hatırla*/, false);
+            if (result.Succeeded)
+            {
+                return Redirect(dto.ReturnUrl ?? "~/");
             }
             ModelState.AddModelError("", "Email adresi veya parola hatalı.");
             return View(dto);
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("~/");
+        }
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                TempData["message"] = "Geçersiz token";
+                return View();
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    TempData["message"] = "Hesabınız onaylandı.";
+                    return View();
+                }
+            }
+            TempData["message"] = "Hesabınız onaylanmadı.";
+            return View();
         }
     }
 }
