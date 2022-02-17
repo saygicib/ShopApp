@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using ShopApp.Business.Concrete;
 using ShopApp.Entities.Dtos;
 using ShopApp.WebUI.Identity;
 using System;
@@ -15,13 +16,11 @@ namespace ShopApp.WebUI.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSender = emailSender;
         }
         public IActionResult Register()
         {
@@ -49,9 +48,7 @@ namespace ShopApp.WebUI.Controllers
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var callBackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token });//Kullanıcıya email olarak gidecek.
 
-                //sendmail
-                await _emailSender.SendEmailAsync(dto.Email,"Confirm your email",$"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link to confirm your email account.");
-
+                MailHelper.SendMail(dto.Email, "Confirm your email", $"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link to confirm your email account.");
 
                 return RedirectToAction("login", "account");
             }
@@ -126,14 +123,59 @@ namespace ShopApp.WebUI.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(string email)
         {
             if (string.IsNullOrEmpty(email))
             {
-                ModelState.AddModelError("","Email adresi giriniz.");
+                ModelState.AddModelError("", "Email adresi giriniz.");
                 return View();
             }
-            return View();
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Email adresi hatalı.");
+                return View();
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callBackUrl = Url.Action("ResetPassword", "Account", new
+            {
+                token = token
+            });//Kullanıcıya email olarak gidecek.
+
+            //sendmail
+            MailHelper.SendMail(email, "Reset Password", $"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link for reset password.");
+            return RedirectToAction("Login", "Account");
+        }
+        [HttpGet]
+        public IActionResult ResetPassword(string token)
+        {
+            if (token == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var model = new ResetPasswordDto { Token = token };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if(user==null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            return View(dto);
         }
     }
 }
