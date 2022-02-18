@@ -10,5 +10,6 @@ namespace ShopApp.DataAccess.Abstract
     public interface ICartDal : IRepositoryBaseDal<Cart>
     {
         Cart GetCartByUserId(string userId);
+        void DeleteFromCart(int cartId, int productId);
     }
 }

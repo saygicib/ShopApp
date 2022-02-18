@@ -26,24 +26,35 @@ namespace ShopApp.WebUI.Controllers
         public IActionResult Index()
         {
             var cart = _cartService.GetCartByUserId(_userManager.GetUserId(User));
-            return View(new CartDto()
+            if (cart != null)
             {
-                CartId=cart.Id,
-                CartItems=cart.CartItems.Select(x=> new CartItemDto() 
+                return View(new CartDto()
                 {
-                    CartItemId= x.Id,
-                    ProductId=x.Product.Id,
-                    Name=x.Product.Name,
-                    Price=x.Product.Price,
-                    ImageUrl=x.Product.ImageUrl,
-                    Quantity=x.Quantity
-                }).ToList()
-            });
+                    CartId = cart.Id,
+                    CartItems = cart.CartItems.Select(x => new CartItemDto()
+                    {
+                        CartItemId = x.Id,
+                        ProductId = x.Product.Id,
+                        Name = x.Product.Name,
+                        Price = x.Product.Price,
+                        ImageUrl = x.Product.ImageUrl,
+                        Quantity = x.Quantity
+                    }).ToList()
+                });
+            }
+            return Redirect("/");
         }
         [HttpPost]
-        public IActionResult AddToCart()
+        public IActionResult AddToCart(int productId, int quantity)
         {
-            return View();
+            _cartService.AddToCart(_userManager.GetUserId(User),productId, quantity);
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public IActionResult DeleteFromCart(int productId)
+        {
+            _cartService.DeleteFromCart(_userManager.GetUserId(User), productId);
+            return RedirectToAction("Index");
         }
     }
 }

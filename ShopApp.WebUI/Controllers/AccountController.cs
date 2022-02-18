@@ -197,5 +197,16 @@ namespace ShopApp.WebUI.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));      
+            return View(new RegisterDto()
+            {
+                FirstName=user.FirstName,
+                LastName=user.LastName,
+                UserName = user.UserName,
+                Email =user.Email
+            });
+        }
     }
 }

@@ -1,0 +1,51 @@
+﻿@model RegisterDto
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>Profile</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="text-danger">@ViewBag.ErrorMesssage</div>
+        }
+        <form asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data">
+            <div class="form-group row">
+                <label asp-for="FirstName" class="col-md-2 col-form-label">FirstName</label>
+                <div class="col-md-10">
+                    <input asp-for="FirstName" value="@Model.FirstName" class="form-control" disabled/>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="LastName" class="col-md-2 col-form-label">LastName</label>
+                <div class="col-md-10">
+                    <input asp-for="LastName" value="@Model.LastName" class="form-control" disabled/>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="UserName" class="col-md-2 col-form-label">UserName</label>
+                <div class="col-md-10">
+                    <input asp-for="UserName" value="@Model.UserName" class="form-control" disabled/>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="Email" class="col-md-2 col-form-label">Email</label>
+                <div class="col-md-10">
+                    <input asp-for="Email" value="@Model.Email" class="form-control" disabled/>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            @*<div class="form-group row">
+                <div class="col-md-10 offset-md-2">
+                    <button type="submit" class="btn btn-primary">Create User</button>
+                </div>
+            </div>*@
+        </form>
+    </div>
+</div>
+

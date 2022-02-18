@@ -11,7 +11,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfCoreGenericRepositoryDal<TEntity, TContext> : IRepositoryBaseDal<TEntity> where TEntity : class where TContext : DbContext, new()
     {
-        public void Create(TEntity entity)
+        public virtual void Create(TEntity entity)
         {
             using (var context = new TContext())
             {
@@ -20,7 +20,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
             using (var context = new TContext())
             {
@@ -29,7 +29,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate=null)
+        public virtual List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate=null)
         {
             using (var context = new TContext())
             {
@@ -39,7 +39,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public TEntity GetById(int id)
+        public virtual TEntity GetById(int id)
         {
             using (var context = new TContext())
             {
@@ -47,7 +47,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public TEntity GetOne(Expression<Func<TEntity, bool>> predicate=null)
+        public virtual TEntity GetOne(Expression<Func<TEntity, bool>> predicate=null)
         {
             using (var context = new TContext())
             {
@@ -57,11 +57,11 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             using (var context = new TContext())
             {
-                context.Entry(entity).State = EntityState.Modified;
+                context.Update(entity).State = EntityState.Modified;
                 context.SaveChanges();
 
             }
