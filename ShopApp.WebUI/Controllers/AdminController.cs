@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ShopApp.WebUI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="admin")]
     public class AdminController : Controller
     {
         private readonly IProductService _productService;

@@ -188,5 +188,9 @@ namespace ShopApp.WebUI.Controllers
 
             return View(dto);
         }
+        public async Task<IActionResult> Accessdenied()
+        {
+            return View();
+        }
     }
 }
