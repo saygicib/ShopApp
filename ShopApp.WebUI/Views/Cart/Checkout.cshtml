@@ -1,4 +1,4 @@
-﻿
+﻿@model OrderDto
 @{
     ViewData["Title"] = "Checkout";
 }
@@ -11,30 +11,30 @@
         <form action="/" method="post">
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label>First Name</label>
-                    <input class="form-control" type="text" name="firstName" value="" />
+                    <label asp-for="@Model.FirstName"></label>
+                    <input asp-for="@Model.FirstName" class="form-control" type="text" name="firstName" value="" />
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label>Last Name</label>
-                    <input class="form-control" type="text" name="lastName" value="" />
+                    <label asp-for="@Model.LastName"></label>
+                    <input asp-for="@Model.LastName" class="form-control" type="text" name="lastName" value="" />
                 </div>
             </div>
             <div class="mb-3">
-                <label>Address</label>
-                <textarea class="form-control" name="address"></textarea>
+                <label asp-for="@Model.Address"></label>
+                <textarea asp-for="@Model.Address" class="form-control" name="address"></textarea>
             </div>
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <label>City</label>
-                    <input class="form-control" type="text" name="city" value="" />
+                    <label asp-for="@Model.City"></label>
+                    <input asp-for="@Model.City" class="form-control" type="text" name="city" value="" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label>Phone</label>
-                    <input class="form-control" type="text" name="phone" value="" />
+                    <label asp-for="@Model.Phone"></label>
+                    <input asp-for="@Model.Phone" class="form-control" type="text" name="phone" value="" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label>Email</label>
-                    <input class="form-control" type="text" name="email" value="" />
+                    <label asp-for="@Model.Email"></label>
+                    <input asp-for="@Model.Email" class="form-control" type="text" name="email" value="" />
                 </div>
             </div>
             <hr class="mb-4" />
@@ -55,26 +55,26 @@
             <h4 class="mb-3">Payment</h4>
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label>Name on Credit Card</label>
-                    <input class="form-control" type="text" name="cardName" value="" />
+                    <label asp-for="@Model.CardName"></label>
+                    <input asp-for="@Model.CardName" class="form-control" type="text" name="cardName" value="" />
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label>Credit Card Number</label>
-                    <input class="form-control" type="text" name="cardNumber" value="" />
+                    <label asp-for="@Model.CardNumber"></label>
+                    <input asp-for="@Model.CardNumber" class="form-control" type="text" name="cardNumber" value="" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <label>Month</label>
-                    <input class="form-control" type="text" name="month" value="" />
+                    <label asp-for="@Model.ExpirationMonth"></label>
+                    <input asp-for="@Model.ExpirationMonth" class="form-control" type="text" name="month" value="" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label>Year</label>
-                    <input class="form-control" type="text" name="year" value="" />
+                    <label asp-for="@Model.ExpirationYear"></label>
+                    <input asp-for="@Model.ExpirationYear" class="form-control" type="text" name="year" value="" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label>CVV Number</label>
-                    <input class="form-control" type="text" name="cvvNumber" value="" />
+                    <label asp-for="@Model.CVV"></label>
+                    <input asp-for="@Model.CVV" class="form-control" type="text" name="cvvNumber" value="" />
                 </div>
             </div>
             <h4 class="mb-4"></h4>
@@ -86,16 +86,20 @@
             <span class="text-muted">Your Cart</span>
         </h4>
         <ul class="list-group mb-3">
-            <li class="list-group-item d-flex justify-content-between">
-                <div>
-                    <h6 class="my-0">Product Name</h6>
-                    <small class="text-muted">Description</small>
-                </div>
-                <span class="text-muted">1000 TL</span>
-            </li>
+            @foreach (var item in Model.CartDto.CartItems)
+            {
+                <li class="list-group-item d-flex justify-content-between">
+                    <div>
+                        <h6 class="my-0">@item.Name
+                            <small>x @item.Quantity</small>
+                        </h6>
+                    </div>
+                    <span class="text-muted">@item.Price TL</span>
+                </li>
+            }
             <li class="list-group-item d-flex justify-content-between">
                 <span class="text-muted">Total (TL)</span>
-                <strong>2000 TL</strong>
+                <strong>@Model.CartDto.TotalPrice() TL</strong>
             </li>
         </ul>
     </div>

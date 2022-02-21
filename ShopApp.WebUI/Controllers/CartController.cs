@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IyzipayCore.Model;
+using IyzipayCore.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ShopApp.Business.Abstract;
@@ -58,7 +60,26 @@ namespace ShopApp.WebUI.Controllers
         }
         public IActionResult Checkout()
         {
-            return View();
+            var cart = _cartService.GetCartByUserId(_userManager.GetUserId(User));
+
+            var orderDto = new OrderDto();
+
+            orderDto.CartDto = new CartDto()
+            {
+                CartId = cart.Id,
+                CartItems = cart.CartItems.Select(x => new CartItemDto()
+                {
+                    CartItemId = x.Id,
+                    ProductId = x.Product.Id,
+                    Name = x.Product.Name,
+                    Price = x.Product.Price,
+                    ImageUrl = x.Product.ImageUrl,
+                    Quantity = x.Quantity
+                }).ToList()
+            };
+
+            return View(orderDto);
         }
+        
     }
 }
