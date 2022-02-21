@@ -95,7 +95,7 @@ namespace ShopApp.WebUI.Controllers
                 dto.CartDto = new CartDto()
                 {
                     CartId = cart.Id,
-                    CartItems = cart.CartItems.Select(x => new CartItemDto() 
+                    CartItems = cart.CartItems.Select(x => new CartItemDto()
                     {
                         CartItemId = x.Id,
                         ProductId = x.Product.Id,
@@ -230,15 +230,46 @@ namespace ShopApp.WebUI.Controllers
                 basketItem.Name = item.Name;
                 basketItem.Category1 = "phone";
                 basketItem.ItemType = BasketItemType.PHYSICAL.ToString();
-                basketItem.Price = (item.Price*item.Quantity).ToString().Split(',')[0];
+                basketItem.Price = (item.Price * item.Quantity).ToString().Split(',')[0];
 
                 basketItems.Add(basketItem);
             }
 
-            
+
             request.BasketItems = basketItems;
 
             return Payment.Create(request, options);
+        }
+        public IActionResult GetOrders()
+        {
+            var orders = _orderService.GetOrders(_userManager.GetUserId(User));
+            var orderListDto = new List<OrderListDto>();
+            OrderListDto orderDto;
+            foreach (var item in orders)
+            {
+                orderDto = new OrderListDto();
+                orderDto.OrderId = item.Id;
+                orderDto.OrderNumber = item.OrderNumber;
+                orderDto.CreatedDate = item.CreatedDate;
+                orderDto.Phone = item.Phone;
+                orderDto.FirstName = item.FirstName;
+                orderDto.LastName = item.LastName;
+                orderDto.Email = item.Email;
+                orderDto.Address = item.Address;
+                orderDto.City = item.City;
+                orderDto.Status = item.Status;
+
+                orderDto.OrderItems = item.OrderItems.Select(x => new OrderItemDto()
+                {
+                    OrderItemId = x.Id,
+                    Name = x.Product.Name,
+                    Price = x.Price,
+                    Quantity = x.Quantity,
+                    ImageUrl = x.Product.ImageUrl,
+                }).ToList();
+                orderListDto.Add(orderDto);
+            }
+            return View(orderListDto);
         }
     }
 }
