@@ -8,33 +8,33 @@
 <div class="row">
     <div class="col-md-8">
         <h4 class="mb-3">Order Details</h4>
-        <form action="/" method="post">
+        <form action="/cart/checkout" method="post">
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label asp-for="@Model.FirstName"></label>
-                    <input asp-for="@Model.FirstName" class="form-control" type="text" name="firstName" value="" />
+                    <input asp-for="@Model.FirstName" class="form-control" type="text" value="" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label asp-for="@Model.LastName"></label>
-                    <input asp-for="@Model.LastName" class="form-control" type="text" name="lastName" value="" />
+                    <input asp-for="@Model.LastName" class="form-control" type="text" value="" />
                 </div>
             </div>
             <div class="mb-3">
                 <label asp-for="@Model.Address"></label>
-                <textarea asp-for="@Model.Address" class="form-control" name="address"></textarea>
+                <textarea asp-for="@Model.Address" class="form-control" ></textarea>
             </div>
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label asp-for="@Model.City"></label>
-                    <input asp-for="@Model.City" class="form-control" type="text" name="city" value="" />
+                    <input asp-for="@Model.City" class="form-control" type="text" value="" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label asp-for="@Model.Phone"></label>
-                    <input asp-for="@Model.Phone" class="form-control" type="text" name="phone" value="" />
+                    <input asp-for="@Model.Phone" class="form-control" type="text"  value="" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label asp-for="@Model.Email"></label>
-                    <input asp-for="@Model.Email" class="form-control" type="text" name="email" value="" />
+                    <input asp-for="@Model.Email" class="form-control" type="text" value="" />
                 </div>
             </div>
             <hr class="mb-4" />
@@ -56,25 +56,25 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label asp-for="@Model.CardName"></label>
-                    <input asp-for="@Model.CardName" class="form-control" type="text" name="cardName" value="" />
+                    <input asp-for="@Model.CardName" class="form-control" type="text" value="" />
                 </div>
                 <div class="col-md-6 mb-3">
                     <label asp-for="@Model.CardNumber"></label>
-                    <input asp-for="@Model.CardNumber" class="form-control" type="text" name="cardNumber" value="" />
+                    <input asp-for="@Model.CardNumber" class="form-control" type="text" value="" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label asp-for="@Model.ExpirationMonth"></label>
-                    <input asp-for="@Model.ExpirationMonth" class="form-control" type="text" name="month" value="" />
+                    <input asp-for="@Model.ExpirationMonth" class="form-control" type="text" value="" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label asp-for="@Model.ExpirationYear"></label>
-                    <input asp-for="@Model.ExpirationYear" class="form-control" type="text" name="year" value="" />
+                    <input asp-for="@Model.ExpirationYear" class="form-control" type="text" value="" />
                 </div>
                 <div class="col-md-4 mb-3">
                     <label asp-for="@Model.CVV"></label>
-                    <input asp-for="@Model.CVV" class="form-control" type="text" name="cvvNumber" value="" />
+                    <input asp-for="@Model.CVV" class="form-control" type="text" value="" />
                 </div>
             </div>
             <h4 class="mb-4"></h4>
