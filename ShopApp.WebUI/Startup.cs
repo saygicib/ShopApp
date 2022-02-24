@@ -6,8 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RabbitMQ.Client;
 using ShopApp.Business.Abstract;
 using ShopApp.Business.Concrete;
+using ShopApp.Business.Services;
+using ShopApp.Business.Services.RabbitMQ;
+using ShopApp.Business.Services.RabbitMQ.BackgroundServices;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.DataAccess.Concrete.EfCore;
 using ShopApp.WebUI.Identity;
@@ -28,6 +32,11 @@ namespace ShopApp.WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(sp => new ConnectionFactory() { Uri = new Uri(Configuration.GetConnectionString("RabbitMQ")),DispatchConsumersAsync=true });
+
+            services.AddSingleton<RabbitMQClientService>();
+            services.AddSingleton<RabbitMQPublisher>();
+
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -74,6 +83,8 @@ namespace ShopApp.WebUI
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<ICartService, CartManager>();
             services.AddScoped<IOrderService, OrderManager>();
+
+            services.AddHostedService<SendMailToUserService>();
             services.AddControllersWithViews();
         }
 

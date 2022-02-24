@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using ShopApp.Business.Abstract;
-using ShopApp.Business.Concrete;
+using ShopApp.Business.Services.Mail;
+using ShopApp.Business.Services.RabbitMQ;
 using ShopApp.Entities.Dtos;
 using ShopApp.WebUI.Identity;
 using System;
@@ -18,13 +19,15 @@ namespace ShopApp.WebUI.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RabbitMQPublisher _rabbitMQPublisher;
         private readonly ICartService _cartService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ICartService cartService)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ICartService cartService, RabbitMQPublisher rabbitMQPublisher)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _cartService = cartService;
+            _rabbitMQPublisher = rabbitMQPublisher;
         }
         public IActionResult Register()
         {
@@ -50,9 +53,9 @@ namespace ShopApp.WebUI.Controllers
             {
                 //token
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callBackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token });//Kullanıcıya email olarak gidecek.
+                var callBackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token });//RabbitMQ ile kullanıcıya email olarak gidecek.
 
-                MailHelper.SendMail(dto.Email, "Confirm your email", $"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link to confirm your email account.");
+                _rabbitMQPublisher.Publish(new UserSendedMail() {Email=dto.Email,MessageTitle= "Confirm your email",MessageBody= $"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link to confirm your email account." });
 
                 TempData.Put("message", new ResultMessage() { Title = "Confirm your email", Message = "Click the link to confirm your email account.", Css = "warning" });
 
@@ -152,11 +155,10 @@ namespace ShopApp.WebUI.Controllers
             var callBackUrl = Url.Action("ResetPassword", "Account", new
             {
                 token = token
-            });//Kullanıcıya email olarak gidecek.
+            });
 
-
-            //sendmail
-            MailHelper.SendMail(email, "Reset Password", $"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link for reset password.");
+            //sendmailRabbitMQ
+            _rabbitMQPublisher.Publish(new UserSendedMail() { Email = email, MessageTitle = "Reset Password",MessageBody= $"<a href='http://localhost:6855{callBackUrl}'>Click</a> the link for reset password." });
 
             TempData.Put("message", new ResultMessage() { Title = "Forgot Password", Message = "Sended mail for reset password", Css = "danger" });
 

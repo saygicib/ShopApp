@@ -7,7 +7,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopApp.Business.Concrete
+namespace ShopApp.Business.Services.Mail
 {
     public class MailHelper
     {
