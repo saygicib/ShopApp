@@ -20,6 +20,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProductCategory>().HasKey(x => new { x.CategoryId, x.ProductId });
+            modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
