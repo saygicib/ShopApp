@@ -20,7 +20,6 @@ namespace ShopApp.DataAccess.Concrete.EfCore.Mappings
             builder.Property(x => x.Name).IsRequired().HasMaxLength(60);
             builder.Property(x => x.ImageUrl).IsRequired();
             builder.Property(x => x.Price).IsRequired();
-            builder.Property(x => x.CreatedDate).HasColumnType("datetime");
         }
     }
 }
