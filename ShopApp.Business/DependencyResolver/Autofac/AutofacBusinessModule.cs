@@ -5,7 +5,7 @@ using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Module = Autofac.Module;
 
-namespace YourServicesPlatform.Business.DependencyResolver.Autofac
+namespace ShopApp.Business.DependencyResolver.Autofac
 {
     public class AutofacBusinessModule : Module
     {

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using YourServicesPlatform.Business.DependencyResolver.Autofac;
+using ShopApp.Business.DependencyResolver.Autofac;
 
 namespace ShopApp.WebUI
 {
